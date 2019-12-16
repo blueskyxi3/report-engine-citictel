@@ -1,0 +1,41 @@
+# Server settings
+server:
+  port: 8888
+  servlet:
+    context-path: /api
+  
+# SPRING PROFILES
+spring:
+  http:
+    encoding.charset: UTF-8
+    encoding.enable: true
+    encoding.force: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/report?characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+  mail:
+    host: smtp.163.com
+    username: zouwei.2006@163.com
+    password: zou3091172    
+    default-encoding: UTF-8
+#    properties.mail.smtp.auth: true
+#    properties.mail.smtp.starttls.enable: true
+#    properties.mail.smtp.starttls.required: true   
+logging:
+  config: classpath:logback.xml
+### xxl-job admin address list, such as "http://address" or "http://address01,http://address02"
+xxl:
+  job:
+    admin.addresses: http://127.0.0.1:8080/xxl-job-admin
+### xxl-job executor address
+    executor.appname: report-engine-executor
+    executor.ip: 
+    executor.port: 9998
+    accessToken:
+    executor.logpath: /tmp/xxl-job/jobhandler
+### xxl-job log retention days
+    executor.logretentiondays: -1  
+  
+  
