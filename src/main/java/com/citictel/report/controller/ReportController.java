@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -37,6 +38,7 @@ import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
  * 2019/12/15
  */
 @RestController
+@Api(tags = "ReportController", description = "Report Engine Interface")
 @RequestMapping("/report")
 public class ReportController {
 

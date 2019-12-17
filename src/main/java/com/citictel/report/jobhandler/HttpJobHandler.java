@@ -1,21 +1,21 @@
 package com.citictel.report.jobhandler;
 
-import com.citictel.report.service.MailService;
-import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.handler.IJobHandler;
-import com.xxl.job.core.handler.annotation.JobHandler;
-import com.xxl.job.core.log.XxlJobLogger;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import javax.annotation.Resource;
+import com.citictel.report.service.MailService;
+import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.handler.IJobHandler;
+import com.xxl.job.core.handler.annotation.JobHandler;
+import com.xxl.job.core.log.XxlJobLogger;
 
 /**
  * 跨平台Http任务
@@ -35,6 +35,7 @@ public class HttpJobHandler extends IJobHandler {
         // request
         HttpURLConnection connection = null;
         BufferedReader bufferedReader = null;
+        InputStream is = null;
         try {
             // connection
             URL realUrl = new URL(param);
@@ -63,6 +64,7 @@ public class HttpJobHandler extends IJobHandler {
             }
 
             // result
+            /**
             bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
             StringBuilder result = new StringBuilder();
             String line;
@@ -72,7 +74,9 @@ public class HttpJobHandler extends IJobHandler {
             String responseMsg = result.toString();
             logger.info(responseMsg);
             mailService.sendHtmlMail(new String[]{"vincentzou@citictel.com"},"Html邮件发送",responseMsg);
-            XxlJobLogger.log(responseMsg);
+            XxlJobLogger.log(responseMsg);*/
+             is = connection.getInputStream();
+            mailService.sendAttachmentMail(new String[]{"vincentzou@citictel.com"},"Html邮件发送","xxxxxxx",is);
             return SUCCESS;
         } catch (Exception e) {
             XxlJobLogger.log(e);
@@ -85,6 +89,7 @@ public class HttpJobHandler extends IJobHandler {
                 if (connection != null) {
                     connection.disconnect();
                 }
+                is.close();
             } catch (Exception e2) {
                 XxlJobLogger.log(e2);
             }

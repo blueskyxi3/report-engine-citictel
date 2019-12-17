@@ -1,13 +1,16 @@
 package com.citictel.report.service;
 
 import java.io.File;
+import java.io.InputStream;
 
 import javax.mail.internet.MimeMessage;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -91,7 +94,23 @@ public class MailService {
         //进行发送
         mailSender.send(message);
     }
+    public void sendAttachmentMail(String[] to,String subject,String content,InputStream inputstream) throws Exception {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message,true);
+        helper.setFrom(from);
+        helper.setTo(to);
+        helper.setBcc(from);
+        helper.setSubject(subject);
+        helper.setText(content,true);
 
+       // new ByteArrayResource(IOUtils.toByteArray(inputStreamResource.getInputStream()))
+        //可以发送多个
+        helper.addAttachment("xxx.pdf",new ByteArrayResource(IOUtils.toByteArray(inputstream)));
+       // helper.addAttachment(filename+"_test",file);
+
+        //进行发送
+        mailSender.send(message);
+    }
     /**
      *  发送图片邮件
      *

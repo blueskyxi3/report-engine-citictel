@@ -34,7 +34,7 @@ xxl:
     executor.ip: 
     executor.port: 9998
     accessToken:
-    executor.logpath: /tmp/xxl-job/jobhandler
+    executor.logpath: /tmp/report-engine-job/jobhandler
 ### xxl-job log retention days
     executor.logretentiondays: -1  
   
