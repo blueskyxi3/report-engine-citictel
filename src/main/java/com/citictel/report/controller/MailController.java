@@ -25,8 +25,19 @@ public class MailController {
 	private MailService mailService;
 	
 	@RequestMapping(value = "/simple/{title}/{recipients}", method = RequestMethod.POST)
-	public Object getReport(String title,String[] recipients,@RequestBody String content) {
+	public Object sentEmail(String title,String[] recipients,@RequestBody String content) {
 		mailService.sendSimpleMail(recipients,title,content);
+		return "SUCCESS";
+	}
+	
+	@RequestMapping(value = "/html/{title}/{recipients}", method = RequestMethod.POST)
+	public Object sentHtmlMail(String title,String[] recipients,@RequestBody String content) {
+		try {
+			mailService.sendHtmlMail(recipients,title,content);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "FAIL";	
+		}
 		return "SUCCESS";
 	}
 	
