@@ -9,7 +9,7 @@
 		<version>2.1.0.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.citictel</groupId>
+	<groupId>com.citictel.report</groupId>
 	<artifactId>report-engine-citictel</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>report-engine-citictel</name>
