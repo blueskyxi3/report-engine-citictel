@@ -28,6 +28,7 @@ public class HttpJobHandler extends IJobHandler {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Resource
 	private MailService mailService;
+	
     @Override
     public ReturnT<String> execute(String param) throws Exception {
         XxlJobLogger.log("XXL-JOB, HttpJobHandler START.");
@@ -38,9 +39,12 @@ public class HttpJobHandler extends IJobHandler {
         InputStream is = null;
         try {
             // connection
-            URL realUrl = new URL(param);
+        	String[] params = param.split("#");
+        	String reportname = params[1];
+        	String email = params[2];
+      
+            URL realUrl = new URL(params[0]);
             connection = (HttpURLConnection) realUrl.openConnection();
-
             // connection setting
             connection.setRequestMethod("GET");
             connection.setDoOutput(true);
@@ -76,7 +80,7 @@ public class HttpJobHandler extends IJobHandler {
             mailService.sendHtmlMail(new String[]{"vincentzou@citictel.com"},"Html邮件发送",responseMsg);
             XxlJobLogger.log(responseMsg);*/
              is = connection.getInputStream();
-            mailService.sendAttachmentMail(new String[]{"vincentzou@citictel.com"},"Html邮件发送","xxxxxxx",is);
+            mailService.sendAttachmentMail(new String[]{email},reportname+" report ","This is test for attachment report!",is,reportname);
             return SUCCESS;
         } catch (Exception e) {
             XxlJobLogger.log(e);

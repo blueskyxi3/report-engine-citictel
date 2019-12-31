@@ -111,6 +111,24 @@ public class MailService {
         //进行发送
         mailSender.send(message);
     }
+    
+    public void sendAttachmentMail(String[] to,String subject,String content,InputStream inputstream,String filename) throws Exception {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message,true);
+        helper.setFrom(from);
+        helper.setTo(to);
+        helper.setBcc(from);
+        helper.setSubject(subject);
+        helper.setText(content,true);
+
+       // new ByteArrayResource(IOUtils.toByteArray(inputStreamResource.getInputStream()))
+        //可以发送多个
+        helper.addAttachment(filename,new ByteArrayResource(IOUtils.toByteArray(inputstream)));
+       // helper.addAttachment(filename+"_test",file);
+
+        //进行发送
+        mailSender.send(message);
+    }
     /**
      *  发送图片邮件
      *

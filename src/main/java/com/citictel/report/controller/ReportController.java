@@ -45,6 +45,9 @@ public class ReportController {
 	@Resource
 	private DataSource dataSource;
 	
+	@Resource
+	private DataSource secondDatasource;
+	
 	@GetMapping("/{format}/{reportName}")
 	public void getReport(@PathVariable("reportName") final String reportName,@PathVariable("format")String format,
 			@RequestParam(required = false) Map<String, Object> parameters, HttpServletResponse response)
