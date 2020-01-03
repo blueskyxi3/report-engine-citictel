@@ -1,6 +1,9 @@
 package com.citictel.report;
 
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 import javax.annotation.Resource;
 
 import org.junit.Test;
@@ -10,7 +13,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.citictel.report.service.MailService;
+import com.citictel.report.service.ReportService;
+
+import net.sf.jasperreports.engine.JRException;
 
 /**
  * Created by ${ligh} on 2018/12/7 上午9:23
@@ -21,11 +29,43 @@ public class TestSpringbootEmail {
 
     @Resource
     MailService mailService;
+    
+    @Resource
+    ReportService reportService;
 
     @Resource
     TemplateEngine templateEngine;
 
-
+    
+    /**
+     *  简单文本邮件发送
+     * @throws IOException 
+     * @throws JRException 
+     * @throws SQLException 
+     * @throws ClassNotFoundException 
+     */
+    @Test
+    public void sendReportTest() throws ClassNotFoundException, SQLException, JRException, IOException{
+    	System.out.println("----------report---------");
+    	reportService.generateReport("demo1", "xlsx", null);
+    }
+    @Test
+    public void jsonTest() throws ClassNotFoundException, SQLException, JRException, IOException{
+    	System.out.println("----------report---------");
+    	reportService.generateReport("demo1", "xlsx", null);
+    }
+    @Test
+    public void test3() 
+    {
+        //简单对象类型
+        String jsonStr = "{'name':'Misaya','position':'Mid','hero':':Twisted Fate'}";
+        
+        JSONObject json = JSON.parseObject(jsonStr);
+        String name = json.getString("name");
+        System.out.println(name);
+        
+        System.out.println(json);
+    }
     /**
      *  简单文本邮件发送
      */

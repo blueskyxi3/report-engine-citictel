@@ -1,8 +1,10 @@
 package com.citictel.report.service;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.io.IOUtils;
@@ -112,7 +114,7 @@ public class MailService {
         mailSender.send(message);
     }
     
-    public void sendAttachmentMail(String[] to,String subject,String content,InputStream inputstream,String filename) throws Exception {
+    public void sendAttachmentMail(String[] to,String subject,String content,InputStream inputstream,String filename) throws MessagingException, IOException  {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message,true);
         helper.setFrom(from);
