@@ -49,7 +49,7 @@ public class ReportController {
 	@Resource
 	private DataSource secondDatasource;
 	
-	@GetMapping("/{dbName}/{format}/{reportName}")
+	@GetMapping("/{format}/{reportName}")
 	public void getReport(@PathVariable("reportName") final String reportName,@PathVariable("format")String format,
 			@RequestParam(required = false) Map<String, Object> parameters, HttpServletResponse response)
 			throws SQLException, ClassNotFoundException, JRException, IOException {
