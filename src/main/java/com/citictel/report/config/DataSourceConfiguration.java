@@ -23,4 +23,10 @@ public class DataSourceConfiguration {
 	public DataSource secondDataSource() {
 		return DataSourceBuilder.create().build();
 	}
+	
+	@Bean(name = "sqlserverDatasource")
+	@ConfigurationProperties(prefix = "spring.sqlserver-datasource")
+	public DataSource sqlServerDataSource() {
+		return DataSourceBuilder.create().build();
+	}
 }

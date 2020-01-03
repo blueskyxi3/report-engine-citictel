@@ -35,34 +35,31 @@ import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 
 /**
  * 
- * @author Vincent Zou
- * 2019/12/15
+ * @author Vincent Zou 2020/01/02
  */
 @RestController
 @Api(tags = "ReportController", description = "Report Engine Interface")
-@RequestMapping("/report")
-public class ReportController {
+@RequestMapping("/sqlserver")
+public class SqlServerReportController {
 
 	@Resource
-	private DataSource dataSource;
-	
-	@Resource
-	private DataSource secondDatasource;
-	
-	@GetMapping("/{dbName}/{format}/{reportName}")
-	public void getReport(@PathVariable("reportName") final String reportName,@PathVariable("format")String format,
+	private DataSource sqlserverDatasource;
+
+	@GetMapping("/{format}/{reportName}")
+	public void getReport(@PathVariable("reportName") final String reportName, @PathVariable("format") String format,
 			@RequestParam(required = false) Map<String, Object> parameters, HttpServletResponse response)
-			throws SQLException, ClassNotFoundException, JRException, IOException {
+			throws ClassNotFoundException, JRException, IOException {
 
 		parameters = parameters == null ? new HashMap<>() : parameters;
 		// 获取文件流
-		ClassPathResource resource = new ClassPathResource("jaspers" + File.separator + reportName + ".jasper");
+		ClassPathResource resource = new ClassPathResource(
+				"jaspers" + File.separator + "sqlserver" + File.separator + reportName + ".jasper");
 		InputStream jasperStream = resource.getInputStream();
 		JasperReport jasperReport = (JasperReport) JRLoader.loadObject(jasperStream);
 		Connection connection = null;
 		JasperPrint jasperPrint = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = sqlserverDatasource.getConnection();
 			jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, connection);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -77,14 +74,15 @@ public class ReportController {
 		}
 
 		response.setCharacterEncoding("utf-8");
-		if(null == format)format = "html";
+		if (null == format)
+			format = "html";
 		String fileName = reportName + "." + format;
-		
+
 		switch (format) {
 		case "docx":
 			response.setHeader("Content-Disposition",
 					"attachment;" + "filename=" + new String(fileName.getBytes(), "ISO-8859-1"));
-			//response.addHeader("Content-Type", "application/x-msword");
+			// response.addHeader("Content-Type", "application/x-msword");
 			response.setContentType("application/x-msword");
 			JRDocxExporter worldExporter = new JRDocxExporter();
 			worldExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
@@ -116,6 +114,6 @@ public class ReportController {
 			exporter.exportReport();
 			break;
 		}
-		
+
 	}
 }
