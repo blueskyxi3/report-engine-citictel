@@ -8,6 +8,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,14 +115,17 @@ public class MailService {
         mailSender.send(message);
     }
     
-    public void sendAttachmentMail(String[] to,String subject,String content,InputStream inputstream,String filename) throws MessagingException, IOException  {
+    public void sendAttachmentMail(String[] to,String[] cc,String[] bcc,String subject,String content,InputStream inputstream,String filename) throws MessagingException, IOException  {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message,true);
         helper.setFrom(from);
         helper.setTo(to);
-        helper.setBcc(from);
+        if(ArrayUtils.isNotEmpty(cc))
+        helper.setCc(cc);
+        if(ArrayUtils.isNotEmpty(bcc))
+        helper.setBcc(bcc);
         helper.setSubject(subject);
-        helper.setText(content,true);
+        helper.setText(content);
 
        // new ByteArrayResource(IOUtils.toByteArray(inputStreamResource.getInputStream()))
         //可以发送多个

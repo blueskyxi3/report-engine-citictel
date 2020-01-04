@@ -80,7 +80,7 @@ public class HttpJobHandler extends IJobHandler {
             mailService.sendHtmlMail(new String[]{"vincentzou@citictel.com"},"Html邮件发送",responseMsg);
             XxlJobLogger.log(responseMsg);*/
              is = connection.getInputStream();
-            mailService.sendAttachmentMail(new String[]{email},reportname+" report ","This is test for attachment report!",is,reportname);
+         //   mailService.sendAttachmentMail(new String[]{email},reportname+" report ","This is test for attachment report!",is,reportname);
             return SUCCESS;
         } catch (Exception e) {
             XxlJobLogger.log(e);
