@@ -154,7 +154,7 @@
 							<mainClass>com.citictel.report.ReportApplication</mainClass>
 						</manifest>
 						<manifestEntries>
-							<Class-Path>./ config/</Class-Path>
+							<Class-Path>./ config/ fonts/</Class-Path>
 						</manifestEntries>
 					</archive>
 					<!--过滤掉不希望包含在jar中的文件 -->
