@@ -1,8 +1,10 @@
 package com.citictel.report.controller;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -12,6 +14,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
@@ -42,7 +47,7 @@ import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 @Api(tags = "ReportController", description = "Report Engine Interface")
 @RequestMapping("/report")
 public class ReportController {
-
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Resource
 	private DataSource dataSource;
 	
@@ -57,6 +62,18 @@ public class ReportController {
 		parameters = parameters == null ? new HashMap<>() : parameters;
 		// 获取文件流
 		ClassPathResource resource = new ClassPathResource("jaspers" + File.separator + reportName + ".jasper");
+		ClassPathResource xmlresource = new ClassPathResource("jaspers" + File.separator + reportName + ".jrxml");
+		long xmllastModified = xmlresource.getFile().lastModified();
+		long lastModified = resource.getFile().lastModified();
+		logger.info("xmllastModified:"+xmllastModified+"  lastModified:"+lastModified + " flag :"+(xmllastModified>lastModified));
+		if(xmllastModified > lastModified) {
+			logger.info("start to compile....");
+		    File jasperfile= resource.getFile();
+		    OutputStream out = new FileOutputStream(jasperfile)  ;    // 通过对象多态性，进行实例化
+			JasperCompileManager.compileReportToStream(xmlresource.getInputStream(),out);
+			out.close();
+			logger.info("compile end....");
+		}
 		InputStream jasperStream = resource.getInputStream();
 		JasperReport jasperReport = (JasperReport) JRLoader.loadObject(jasperStream);
 		Connection connection = null;

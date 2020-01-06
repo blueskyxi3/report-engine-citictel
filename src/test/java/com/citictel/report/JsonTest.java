@@ -38,4 +38,20 @@ public class JsonTest {
 	        System.out.println(p);
 	        
 	    }
+	 
+	 
+	 @Test
+	    public void Json2RepoartParam2() 
+	    {
+	        //待解析的json字符串
+	        String jsonString = "{\"reportName\":\"demo1.xlsx\",\"datasource\":\"idd\",\"params\":{\"p1\":\"Fizz\",\"p2\":\"Mid\",\"p3\":\"killer\"},\"toEmails\":[\"vincentzou@citictel.com\",\"343854933@qq.com\"],\r\n" + 
+	        		"	        		\"ccEmails\":[\"vincentzou1@citictel.com\",\"343854932@qq.com\"],\"bccEmails\":[\"vincentzoubxx@citictel.com\",\"343854931@qq.com\"],\r\n" + 
+	        		"	        		\"subject\":\"this is test email report\",\r\n" + 
+	        		"	        		\"content\":\"Dir Sir, /n this is test email report. please refer to attachemnt for detail info! /n thanks.\"}";
+	        
+	        ReportParam p = JSON.parseObject(jsonString, ReportParam.class);
+	        
+	        System.out.println(p);
+	        
+	    }
 }
