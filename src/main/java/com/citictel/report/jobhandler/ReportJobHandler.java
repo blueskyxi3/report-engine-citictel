@@ -47,7 +47,7 @@ public class ReportJobHandler extends IJobHandler {
         String filename = rp.getReportName();
         if(StringUtils.isEmpty(filename)) return new ReturnT<String>(500,"please set reportname !");
 		InputStream is =  reportService.generateReport(filename.split("\\.")[0], filename.split("\\.")[1], rp.getParams());
-		mailService.sendAttachmentMail(rp.getToEmails(),rp.getCcEmails(),rp.getBccEmails(),rp.getSubject(),rp.getContent(),is,rp.getReportName());
+		mailService.sendAttachmentMail(rp.getTo(),rp.getCc(),rp.getBcc(),rp.getSubject(),rp.getContent(),is,rp.getReportName());
 
 		logger.info("log===>Report Engine start----");
 		XxlJobLogger.log("ReportJobHandler END........");

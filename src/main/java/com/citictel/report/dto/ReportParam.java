@@ -12,11 +12,11 @@ public class ReportParam {
 	
 	private String reportName ;
 	
-	private String[] toEmails;
+	private String[] to;
 	
-	private String[] ccEmails;
+	private String[] cc;
 	
-	private String[] bccEmails;
+	private String[] bcc;
 	
 	private String subject ;
 	
@@ -33,22 +33,29 @@ public class ReportParam {
 		this.params = params;
 	}
 
-	public String[] getCcEmails() {
-		return ccEmails;
+	public String[] getTo() {
+		return to;
 	}
 
-	public void setCcEmails(String[] ccEmails) {
-		this.ccEmails = ccEmails;
+	public void setTo(String[] to) {
+		this.to = to;
 	}
 
-	public String[] getBccEmails() {
-		return bccEmails;
+	public String[] getCc() {
+		return cc;
 	}
 
-	public void setBccEmails(String[] bccEmails) {
-		this.bccEmails = bccEmails;
+	public void setCc(String[] cc) {
+		this.cc = cc;
 	}
 
+	public String[] getBcc() {
+		return bcc;
+	}
+
+	public void setBcc(String[] bcc) {
+		this.bcc = bcc;
+	}
 
 	public String getSubject() {
 		return subject;
@@ -82,19 +89,13 @@ public class ReportParam {
 		this.reportName = reportName;
 	}
 
-	public String[] getToEmails() {
-		return toEmails;
-	}
 
-	public void setToEmails(String[] toEmails) {
-		this.toEmails = toEmails;
-	}
 
 	@Override
 	public String toString() {
-		return "ReportParam [datasource=" + datasource + ", reportName=" + reportName + ", toEmails="
-				+ Arrays.toString(toEmails) + ", ccEmails=" + Arrays.toString(ccEmails) + ", bccEmails="
-				+ Arrays.toString(bccEmails) + ", title=" + subject + ", content=" + content + ", params=" + params + "]";
+		return "ReportParam [datasource=" + datasource + ", reportName=" + reportName + ", to="
+				+ Arrays.toString(to) + ", cc=" + Arrays.toString(cc) + ", bcc="
+				+ Arrays.toString(bcc) + ", title=" + subject + ", content=" + content + ", params=" + params + "]";
 	}
 
 
