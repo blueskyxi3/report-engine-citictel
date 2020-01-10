@@ -1,0 +1,1 @@
+nohup java -jar  report-engine-citictel-0.0.1-SNAPSHOT.jar >out.log 2>&1 &

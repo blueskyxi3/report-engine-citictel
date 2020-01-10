@@ -37,7 +37,7 @@ spring:
       connection-test-query: SELECT 1
   mail:
     host: 202.68.194.227
-    username: report-engine-test@citictel.com
+    username: report-engine@citictel.com
 #    password: zou3091172    
     default-encoding: UTF-8
 #    properties.mail.smtp.auth: true
@@ -48,13 +48,13 @@ logging:
 ### xxl-job admin address list, such as "http://address" or "http://address01,http://address02"
 xxl:
   job:
-    admin.addresses: http://192.168.100.177:8085/xxl-job-admin,http://192.168.101.231:8085/xxl-job-admin
+    admin.addresses: http://192.168.101.170:8085/xxl-job-admin,http://192.168.101.171:8085/xxl-job-admin
 ### xxl-job executor address
     executor.appname: report-engine-executor
     executor.ip: 
-    executor.port: 9998
+    executor.port: 9999
     accessToken:
-    executor.logpath: /tmp/report-engine-job/jobhandler
+    executor.logpath: /data/report-engine-job/jobhandler
 ### xxl-job log retention days
     executor.logretentiondays: -1  
   
