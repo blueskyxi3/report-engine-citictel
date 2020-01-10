@@ -10,17 +10,22 @@ import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
+import com.citictel.report.dto.ReportResult;
+
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRPrintPage;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -48,20 +53,29 @@ public class ReportService {
 	@Resource
 	private DataSource secondDatasource;
 
-	public InputStream generateReport(String reportName, String format, Map<String, Object> parameters)
+	public ReportResult generateReport(String reportName, String format, Map<String, Object> parameters)
 			throws JRException, IOException {
-
+        boolean isHavedata = false;  
 		parameters = parameters == null ? new HashMap<>() : parameters;
 		// 获取文件流
 		ClassPathResource resource = new ClassPathResource("jaspers" + File.separator + reportName + ".jasper");
 		ClassPathResource xmlresource = new ClassPathResource("jaspers" + File.separator + reportName + ".jrxml");
 		long xmllastModified = xmlresource.getFile().lastModified();
-		long lastModified = resource.getFile().lastModified();
-		if (xmllastModified > lastModified) {
-			logger.info("start to compile....");
-			File jasperfile = resource.getFile();
-			OutputStream out = new FileOutputStream(jasperfile); // 通过对象多态性，进行实例化
-			JasperCompileManager.compileReportToStream(xmlresource.getInputStream(), out);
+		long lastModified = 0;
+		logger.info("=====================>"+resource.exists());
+		if(resource.exists())
+		lastModified = resource.getFile().lastModified();
+		logger.info("xmllastModified:"+xmllastModified+"  lastModified:"+lastModified + " flag :"+(xmllastModified>lastModified));
+		if(xmllastModified > lastModified) {
+			logger.info("start to compile...."); 
+		    ClassPathResource tempResource = new ClassPathResource("jaspers");
+		    String parentpath = tempResource.getURI().getPath();
+		    logger.info("parentpath:" + parentpath);
+		    File jasperfile = new File(parentpath, reportName + ".jasper");
+		    logger.info(jasperfile.getAbsolutePath());
+		    FileUtils.touch(jasperfile);
+		    OutputStream out = new FileOutputStream(jasperfile)  ;    // 通过对象多态性，进行实例化
+			JasperCompileManager.compileReportToStream(xmlresource.getInputStream(),out);
 			out.close();
 			logger.info("compile end....");
 		}
@@ -72,9 +86,14 @@ public class ReportService {
 		try {
 			connection = dataSource.getConnection();
 			jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, connection);
+			List<JRPrintPage> list = jasperPrint.getPages();
+			logger.info("pages===>"+list);
+			logger.info("pages=size==>"+list.size());
+			if(list.size() > 0) isHavedata = true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
+			if(jasperStream !=null)jasperStream.close();
 			if (connection != null)
 				try {
 					connection.close();
@@ -113,6 +132,6 @@ public class ReportService {
 			break;
 		}
 		InputStream is = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-		return is;
+		return new ReportResult(is,isHavedata);
 	}
 }

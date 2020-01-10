@@ -1,8 +1,6 @@
 package com.citictel.report.jobhandler;
 
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -13,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
 import com.citictel.report.dto.ReportParam;
+import com.citictel.report.dto.ReportResult;
 import com.citictel.report.service.MailService;
 import com.citictel.report.service.ReportService;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -30,6 +29,7 @@ import com.xxl.job.core.log.XxlJobLogger;
  *
  * @author vincent zou 2020-01-03 21:43:36
  */
+@SuppressWarnings("deprecation")
 @JobHandler(value = "reportJobHandler")
 @Component
 public class ReportJobHandler extends IJobHandler {
@@ -46,7 +46,13 @@ public class ReportJobHandler extends IJobHandler {
 		logger.info("Report Engine start------");
         String filename = rp.getReportName();
         if(StringUtils.isEmpty(filename)) return new ReturnT<String>(500,"please set reportname !");
-		InputStream is =  reportService.generateReport(filename.split("\\.")[0], filename.split("\\.")[1], rp.getParams());
+		ReportResult res =  reportService.generateReport(filename.split("\\.")[0], filename.split("\\.")[1], rp.getParams());
+		XxlJobLogger.log("ReportJobHandler is have data........"+res.isHaveData());
+		if(!res.isHaveData()) { 
+			XxlJobLogger.log("ReportJobHandler END........");
+			return SUCCESS;
+		}
+		InputStream is = res.getInputStream();
 		mailService.sendAttachmentMail(rp.getTo(),rp.getCc(),rp.getBcc(),rp.getSubject(),rp.getContent(),is,rp.getReportName());
 
 		logger.info("log===>Report Engine start----");
