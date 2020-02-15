@@ -29,4 +29,10 @@ public class DataSourceConfiguration {
 	public DataSource sqlServerDataSource() {
 		return DataSourceBuilder.create().build();
 	}
+	
+	@Bean(name = "oracleDatasource")
+	@ConfigurationProperties(prefix = "spring.oracle-datasource")
+	public DataSource oracleDataSource() {
+		return DataSourceBuilder.create().build();
+	}
 }

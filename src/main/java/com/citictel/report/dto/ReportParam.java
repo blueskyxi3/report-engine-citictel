@@ -8,7 +8,7 @@ public class ReportParam {
 	
 //	"demo1.xlsx?p1=xx&p2=xx2#vincentzou@citictel.com#idd";
 
-	private String datasource = "idd";
+	private String datasource = "local";
 	
 	private String reportName ;
 	

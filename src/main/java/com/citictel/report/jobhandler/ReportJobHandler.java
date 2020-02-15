@@ -46,7 +46,7 @@ public class ReportJobHandler extends IJobHandler {
 		logger.info("Report Engine start------");
         String filename = rp.getReportName();
         if(StringUtils.isEmpty(filename)) return new ReturnT<String>(500,"please set reportname !");
-		ReportResult res =  reportService.generateReport(filename.split("\\.")[0], filename.split("\\.")[1], rp.getParams());
+		ReportResult res =  reportService.generateReport(filename.split("\\.")[0], filename.split("\\.")[1],rp.getDatasource(), rp.getParams());
 		XxlJobLogger.log("ReportJobHandler is have data........"+res.isHaveData());
 		if(!res.isHaveData()) { 
 			XxlJobLogger.log("ReportJobHandler END........");

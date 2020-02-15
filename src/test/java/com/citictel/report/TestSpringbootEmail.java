@@ -47,12 +47,12 @@ public class TestSpringbootEmail {
     @Test
     public void sendReportTest() throws ClassNotFoundException, SQLException, JRException, IOException{
     	System.out.println("----------report---------");
-    	reportService.generateReport("demo1", "xlsx", null);
+    	reportService.generateReport("demo1", "xlsx", "",null);
     }
     @Test
     public void jsonTest() throws ClassNotFoundException, SQLException, JRException, IOException{
     	System.out.println("----------report---------");
-    	reportService.generateReport("demo1", "xlsx", null);
+    	reportService.generateReport("demo1", "xlsx","", null);
     }
     @Test
     public void test3() 
