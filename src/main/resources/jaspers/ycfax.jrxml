@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ycfax" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="df013db5-f76e-44d3-b0df-bcbc46d93160">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.white.page.background" value="false"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="cdrtest"/>
+	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true"/>
+	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<style name="Row" mode="Transparent">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#E6DAC3"/>
+		</conditionalStyle>
+	</style>
+	<queryString language="SQL">
+		<![CDATA[select *
+  from (select cdr_date,
+               calling_num,
+               called_num,
+               pages,
+               'fax2email' FAX_TYPE
+          from cdr.youcfax2email_raw
+         where cdr_date >= add_months(trunc(sysdate, 'mon'), -1)
+           and cdr_date < trunc(sysdate, 'mon')
+        union
+        select cdr_date,
+               calling_num,
+               called_num,
+               pages,
+               'email2fax' FAX_TYPE
+          from cdr.youcemail2fax_raw
+         where cdr_date >= add_months(trunc(sysdate, 'mon'), -1)
+           and cdr_date < trunc(sysdate, 'mon'))
+ order by cdr_date, fax_type desc]]>
+	</queryString>
+	<field name="CDR_DATE" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="CDR_DATE"/>
+	</field>
+	<field name="CALLING_NUM" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CALLING_NUM"/>
+	</field>
+	<field name="CALLED_NUM" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CALLED_NUM"/>
+	</field>
+	<field name="PAGES" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="PAGES"/>
+	</field>
+	<field name="FAX_TYPE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="FAX_TYPE"/>
+	</field>
+	<title>
+		<band height="51" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement style="Title" x="0" y="0" width="190" height="49" uuid="bc1ce1da-8232-46ea-be55-cec4abb986dd"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="39"/>
+				</textElement>
+				<text><![CDATA[Aeon CDR
+youcfax_mon_cdr_rpt
+Aeon CDR - Jan 2020]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="16" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="15" width="802" height="1" uuid="e9d2002a-c8ee-4649-a258-640dad29110c"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement style="Column header" x="0" y="0" width="160" height="16" forecolor="#000000" uuid="ff055584-0b76-4698-b35e-5e47af0ed484">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7390ece5-58cb-409e-ae3b-7da36e7d7b84"/>
+					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Top"/>
+				</reportElement>
+				<text><![CDATA[CDR_DATE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="160" y="0" width="160" height="16" forecolor="#000000" uuid="fd8acb79-f80a-4c31-b2d1-18d7af45d7b7">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="37c295ba-0e8c-465f-be65-279194ff6847"/>
+					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Top"/>
+				</reportElement>
+				<text><![CDATA[CALLING_NUM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="320" y="0" width="160" height="16" forecolor="#000000" uuid="b1afef92-121f-4bfb-a3c4-bf30b2bd17b2">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="23ebf13a-68f1-466f-9102-01aa1b7a51b7"/>
+					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Top"/>
+				</reportElement>
+				<text><![CDATA[CALLED_NUM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="480" y="0" width="160" height="16" forecolor="#000000" uuid="491fae28-3869-41d7-bf59-558cb39bbe7a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1ef312e8-8d19-43a7-b6d8-5cd4db257d03"/>
+					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Top"/>
+				</reportElement>
+				<text><![CDATA[PAGES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="640" y="0" width="160" height="16" forecolor="#000000" uuid="da2d7689-5fdb-498e-aee5-b106a59c558a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b8de0e24-0a63-4108-85fd-107de8637c88"/>
+					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Top"/>
+				</reportElement>
+				<text><![CDATA[FAX_TYPE]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="0" width="802" height="15" uuid="fa7cec56-4ec1-48e6-a26e-7266a995d174"/>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" x="0" y="0" width="160" height="15" uuid="92a95b66-528f-4a28-93d8-e3e0f64c7af1">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7390ece5-58cb-409e-ae3b-7da36e7d7b84"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{CDR_DATE}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" x="160" y="0" width="160" height="15" uuid="ffde499d-fe49-45bc-8ec2-14c4a8933cb3">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="37c295ba-0e8c-465f-be65-279194ff6847"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{CALLING_NUM}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" x="320" y="0" width="160" height="15" uuid="69b26cf0-cd8a-46b8-a1be-b661d942bff7">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="23ebf13a-68f1-466f-9102-01aa1b7a51b7"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{CALLED_NUM}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" x="480" y="0" width="160" height="15" uuid="88a2f583-322a-441d-91d1-e253f246cb34">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1ef312e8-8d19-43a7-b6d8-5cd4db257d03"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{PAGES}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" x="640" y="0" width="160" height="15" uuid="ac443e4c-14da-48f6-b7f4-a33d7c26afd4">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b8de0e24-0a63-4108-85fd-107de8637c88"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{FAX_TYPE}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+</jasperReport>

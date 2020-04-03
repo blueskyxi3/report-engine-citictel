@@ -58,7 +58,10 @@ public class ReportController {
 	private DataSource sqlserverDatasource;
 
 	@Resource
-	private DataSource oracleDatasource;
+	private DataSource cdrDatasource;
+	
+	@Resource
+	private DataSource cdrTestDatasource;
 	
 	@GetMapping("/{datasource}/{format}/{reportName}")
 	public void getReport(@PathVariable("reportName") final String reportName,@PathVariable("datasource")String datasource,@PathVariable("format")String format,
@@ -74,7 +77,9 @@ public class ReportController {
 		JasperPrint jasperPrint = null;
 		try {
 			if("local".equals(datasource)) {connection = dataSource.getConnection();}
-			else if("IDD" .equals(datasource)) {connection = oracleDatasource.getConnection();}
+			else if("IDD" .equals(datasource)) {connection = cdrTestDatasource.getConnection();}
+			else if("CDR" .equals(datasource)) {connection = cdrDatasource.getConnection();}
+			else if("CDRTEST" .equals(datasource)) {connection = cdrTestDatasource.getConnection();}
 			else if("Ticket".equals(datasource)) {connection = sqlserverDatasource.getConnection();}
 			else if("Second".equals(datasource)) {connection = secondDatasource.getConnection();}
 			else  {connection = dataSource.getConnection();}

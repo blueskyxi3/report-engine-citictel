@@ -30,9 +30,17 @@ public class DataSourceConfiguration {
 		return DataSourceBuilder.create().build();
 	}
 	
-	@Bean(name = "oracleDatasource")
-	@ConfigurationProperties(prefix = "spring.oracle-datasource")
+	@Bean(name = "cdrTestDatasource")
+	@ConfigurationProperties(prefix = "spring.oracle-cdr-test")
 	public DataSource oracleDataSource() {
 		return DataSourceBuilder.create().build();
 	}
+	
+	@Bean(name = "cdrDatasource")
+	@ConfigurationProperties(prefix = "spring.oracle-cdr")
+	public DataSource cdrDataSource() {
+		return DataSourceBuilder.create().build();
+	}
+	
+	
 }

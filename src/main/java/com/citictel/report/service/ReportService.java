@@ -43,6 +43,7 @@ import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 public class ReportService {
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	@Resource
 	private DataSource dataSource;
 
@@ -53,7 +54,10 @@ public class ReportService {
 	private DataSource sqlserverDatasource;
 
 	@Resource
-	private DataSource oracleDatasource;
+	private DataSource cdrDatasource;
+	
+	@Resource
+	private DataSource cdrTestDatasource;
 
 	public ReportResult generateReport(String reportName, String format,String datasource, Map<String, Object> parameters)
 			throws JRException, IOException {
@@ -67,8 +71,9 @@ public class ReportService {
 		JasperPrint jasperPrint = null;
 		try {
 			if("local".equals(datasource)) {connection = dataSource.getConnection();}
-			else if("IDD" .equals(datasource)) {connection = oracleDatasource.getConnection();}
-			else if("Ticket" .equals(datasource)) {connection = sqlserverDatasource.getConnection();}
+			else if("IDD" .equals(datasource)) {connection = cdrTestDatasource.getConnection();}
+			else if("CDR" .equals(datasource)) {connection = cdrDatasource.getConnection();}
+			else if("CDRTEST" .equals(datasource)) {connection = cdrTestDatasource.getConnection();}
 			else if("Second" .equals(datasource)) {connection = secondDatasource.getConnection();}
 			else  {connection = dataSource.getConnection();}
 			

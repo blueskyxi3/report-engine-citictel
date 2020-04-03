@@ -10,6 +10,16 @@ spring:
     encoding.charset: UTF-8
     encoding.enable: true
     encoding.force: true
+  oracle-cdr:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    jdbc-url: jdbc:oracle:thin:@192.168.100.23:1521:cdrprd
+    username: cdr
+    password: cdr1616 
+  oracle-cdr-test:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    jdbc-url: jdbc:oracle:thin:@192.168.100.177:1522:cdrtest
+    username: cdr
+    password: oracle2019   
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     jdbc-url: jdbc:mysql://192.168.100.177:3307/report?characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8
@@ -19,12 +29,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     jdbc-url: jdbc:mysql://192.168.100.177:3307/xxl_job?characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8
     username: root
-    password: 123456 
-  oracle-datasource:
-    driver-class-name: oracle.jdbc.driver.OracleDriver
-    jdbc-url: jdbc:oracle:thin:@192.168.100.23:1521:cdrprd
-    username: bss
-    password: bss2018   
+    password: 123456  
   sqlserver-datasource:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     jdbc-url: jdbc:sqlserver://192.168.201.176:1433;DatabaseName=eBillingForm

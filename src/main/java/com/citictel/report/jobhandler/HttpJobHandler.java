@@ -2,6 +2,7 @@ package com.citictel.report.jobhandler;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -32,19 +33,16 @@ public class HttpJobHandler extends IJobHandler {
     @Override
     public ReturnT<String> execute(String param) throws Exception {
         XxlJobLogger.log("XXL-JOB, HttpJobHandler START.");
-        logger.info("--http---START----");
+        XxlJobLogger.log("--http---START----param:{}",param);
+        logger.info("--http---START----param:{}",param);
         // request
         HttpURLConnection connection = null;
         BufferedReader bufferedReader = null;
-        InputStream is = null;
         try {
             // connection
-        	String[] params = param.split("#");
-        	String reportname = params[1];
-        	String email = params[2];
-      
-            URL realUrl = new URL(params[0]);
+            URL realUrl = new URL(param);
             connection = (HttpURLConnection) realUrl.openConnection();
+
             // connection setting
             connection.setRequestMethod("GET");
             connection.setDoOutput(true);
@@ -58,7 +56,6 @@ public class HttpJobHandler extends IJobHandler {
 
             // do connection
             connection.connect();
-
             //Map<String, List<String>> map = connection.getHeaderFields();
 
             // valid StatusCode
@@ -68,7 +65,6 @@ public class HttpJobHandler extends IJobHandler {
             }
 
             // result
-            /**
             bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
             StringBuilder result = new StringBuilder();
             String line;
@@ -76,15 +72,12 @@ public class HttpJobHandler extends IJobHandler {
                 result.append(line);
             }
             String responseMsg = result.toString();
-            logger.info(responseMsg);
-            mailService.sendHtmlMail(new String[]{"vincentzou@citictel.com"},"Html邮件发送",responseMsg);
-            XxlJobLogger.log(responseMsg);*/
-             is = connection.getInputStream();
-         //   mailService.sendAttachmentMail(new String[]{email},reportname+" report ","This is test for attachment report!",is,reportname);
-            return SUCCESS;
+
+            XxlJobLogger.log(responseMsg);
+            return ReturnT.SUCCESS;
         } catch (Exception e) {
             XxlJobLogger.log(e);
-            return FAIL;
+            return ReturnT.FAIL;
         } finally {
             try {
                 if (bufferedReader != null) {
@@ -93,12 +86,11 @@ public class HttpJobHandler extends IJobHandler {
                 if (connection != null) {
                     connection.disconnect();
                 }
-                is.close();
             } catch (Exception e2) {
                 XxlJobLogger.log(e2);
             }
         }
-
+  
     }
 
 }
