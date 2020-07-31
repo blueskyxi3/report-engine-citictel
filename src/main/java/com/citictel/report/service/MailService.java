@@ -165,5 +165,26 @@ public class MailService {
         }
 
     }
+    
+    public void sendAttachmentMail(String[] to,String[] cc,String[] bcc,String subject,String content,InputStream inputstream,String filename,InputStream inputstream1,String filename1) throws MessagingException, IOException  {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message,true);
+        helper.setFrom(from);
+        helper.setTo(to);
+        if(ArrayUtils.isNotEmpty(cc))
+        helper.setCc(cc);
+        if(ArrayUtils.isNotEmpty(bcc))
+        helper.setBcc(bcc);
+        helper.setSubject(subject);
+        helper.setText(content);
+
+       // new ByteArrayResource(IOUtils.toByteArray(inputStreamResource.getInputStream()))
+        //可以发送多个
+        helper.addAttachment(filename,new ByteArrayResource(IOUtils.toByteArray(inputstream)));
+        helper.addAttachment(filename1,new ByteArrayResource(IOUtils.toByteArray(inputstream1)));
+       // helper.addAttachment(filename+"_test",file);
+        //进行发送
+        mailSender.send(message);
+    }
 }
 

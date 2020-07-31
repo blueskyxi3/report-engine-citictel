@@ -4,10 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +25,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.citictel.report.utils.ParamtersUtils;
 
 import io.swagger.annotations.Api;
 import net.sf.jasperreports.engine.JRException;
@@ -39,14 +45,13 @@ import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 
 /**
  * 
- * @author Vincent Zou
- * 2019/12/15
+ * @author Vincent Zou 2019/12/15
  */
 @RestController
 @Api(tags = "ReportController", description = "Report Engine Interface")
 @RequestMapping("/report")
 public class ReportController {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Resource
 	private DataSource dataSource;
@@ -59,16 +64,21 @@ public class ReportController {
 
 	@Resource
 	private DataSource cdrDatasource;
-	
+
 	@Resource
 	private DataSource cdrTestDatasource;
-	
+
+	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");// 注意月份是MM
+
 	@GetMapping("/{datasource}/{format}/{reportName}")
-	public void getReport(@PathVariable("reportName") final String reportName,@PathVariable("datasource")String datasource,@PathVariable("format")String format,
+	public void getReport(@PathVariable("reportName") final String reportName,
+			@PathVariable("datasource") String datasource, @PathVariable("format") String format,
 			@RequestParam(required = false) Map<String, Object> parameters, HttpServletResponse response)
-			throws SQLException, ClassNotFoundException, JRException, IOException {
-		logger.info("datasource===>"+datasource);
+			throws SQLException, ClassNotFoundException, JRException, IOException, ParseException {
+		logger.info("datasource===>" + datasource);
 		parameters = parameters == null ? new HashMap<>() : parameters;
+		Map<String, Object> map  = ParamtersUtils.handleParameters(parameters);
+
 		// 获取文件流
 		ClassPathResource resource = new ClassPathResource("jaspers" + File.separator + reportName + ".jasper");
 		InputStream jasperStream = resource.getInputStream();
@@ -76,21 +86,29 @@ public class ReportController {
 		Connection connection = null;
 		JasperPrint jasperPrint = null;
 		try {
-			if("local".equals(datasource)) {connection = dataSource.getConnection();}
-			else if("IDD" .equals(datasource)) {connection = cdrTestDatasource.getConnection();}
-			else if("CDR" .equals(datasource)) {connection = cdrDatasource.getConnection();}
-			else if("CDRTEST" .equals(datasource)) {connection = cdrTestDatasource.getConnection();}
-			else if("Ticket".equals(datasource)) {connection = sqlserverDatasource.getConnection();}
-			else if("Second".equals(datasource)) {connection = secondDatasource.getConnection();}
-			else  {connection = dataSource.getConnection();}
-			jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, connection);
+			if ("local".equals(datasource)) {
+				connection = dataSource.getConnection();
+			} else if ("IDD".equals(datasource)) {
+				connection = cdrTestDatasource.getConnection();
+			} else if ("CDR".equals(datasource)) {
+				connection = cdrDatasource.getConnection();
+			} else if ("CDRTEST".equals(datasource)) {
+				connection = cdrTestDatasource.getConnection();
+			} else if ("Ticket".equals(datasource)) {
+				connection = sqlserverDatasource.getConnection();
+			} else if ("Second".equals(datasource)) {
+				connection = secondDatasource.getConnection();
+			} else {
+				connection = dataSource.getConnection();
+			}
+			jasperPrint = JasperFillManager.fillReport(jasperReport, map, connection);
 			List<JRPrintPage> list = jasperPrint.getPages();
-			logger.info("list===>"+list);
-			logger.info("list=size==>"+list.size());
+			logger.info("list===>" + list);
+			logger.info("list=size==>" + list.size());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if(jasperStream != null)
+			if (jasperStream != null)
 				jasperStream.close();
 			if (connection != null)
 				try {
@@ -101,14 +119,15 @@ public class ReportController {
 		}
 
 		response.setCharacterEncoding("utf-8");
-		if(null == format)format = "html";
+		if (null == format)
+			format = "html";
 		String fileName = reportName + "." + format;
-		
+
 		switch (format) {
 		case "docx":
 			response.setHeader("Content-Disposition",
 					"attachment;" + "filename=" + new String(fileName.getBytes(), "ISO-8859-1"));
-			//response.addHeader("Content-Type", "application/x-msword");
+			// response.addHeader("Content-Type", "application/x-msword");
 			response.setContentType("application/x-msword");
 			JRDocxExporter worldExporter = new JRDocxExporter();
 			worldExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
@@ -140,6 +159,6 @@ public class ReportController {
 			exporter.exportReport();
 			break;
 		}
-		
+
 	}
 }
