@@ -1,8 +1,11 @@
 package com.citictel.report.service;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -186,5 +189,41 @@ public class MailService {
         //进行发送
         mailSender.send(message);
     }
+    
+    public void sendHtmlMail(String[] to,String[] cc,String[] bcc,String subject,InputStream inputstream) throws Exception {
+    	String content = new BufferedReader(new InputStreamReader(inputstream))
+    			.lines().parallel().collect(Collectors.joining(System.lineSeparator()));
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,true);
+
+        helper.setFrom(from);
+        helper.setTo(to);
+        if(ArrayUtils.isNotEmpty(cc))
+        helper.setCc(cc);
+        if(ArrayUtils.isNotEmpty(bcc))
+        helper.setBcc(bcc);
+        helper.setSubject(subject);
+        helper.setText(content,true);
+        mailSender.send(mimeMessage);
+    }
+    
+    public void sendHtmlMailWithAttachment(String[] to,String[] cc,String[] bcc,String subject,InputStream inputstream,InputStream inputstream1,String filename1) throws Exception {
+    	String content = new BufferedReader(new InputStreamReader(inputstream))
+    			.lines().parallel().collect(Collectors.joining(System.lineSeparator()));
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,true);
+
+        helper.setFrom(from);
+        helper.setTo(to);
+        if(ArrayUtils.isNotEmpty(cc))
+        helper.setCc(cc);
+        if(ArrayUtils.isNotEmpty(bcc))
+        helper.setBcc(bcc);
+        helper.setSubject(subject);
+        helper.setText(content,true);
+        helper.addAttachment(filename1,new ByteArrayResource(IOUtils.toByteArray(inputstream1)));
+        mailSender.send(mimeMessage);
+    }
+
 }
 

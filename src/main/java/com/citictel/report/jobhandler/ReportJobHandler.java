@@ -73,12 +73,18 @@ public class ReportJobHandler extends IJobHandler {
 						rp.getDatasource(), map);
 				is = res.getInputStream();
 				is1 = res1.getInputStream();
+				if(filename.contains("html")) {
+					mailService.sendHtmlMailWithAttachment(rp.getTo(), rp.getCc(), rp.getBcc(), rp.getSubject(), is,is1, filename1);
+				}else {
 				mailService.sendAttachmentMail(rp.getTo(), rp.getCc(), rp.getBcc(), rp.getSubject(), rp.getContent(),
-						is, filename, is1, filename1);
+						is, filename, is1, filename1);}
 			} else {
 				is = res.getInputStream();
+				if(filename.contains("html")) {
+					mailService.sendHtmlMail(rp.getTo(), rp.getCc(), rp.getBcc(), rp.getSubject(), is);
+				}else {
 				mailService.sendAttachmentMail(rp.getTo(), rp.getCc(), rp.getBcc(), rp.getSubject(), rp.getContent(),
-						is, rp.getReportName());
+						is, rp.getReportName());}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
